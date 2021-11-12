@@ -1,0 +1,4 @@
+Flask~=2.0.2
+WTForms~=3.0.0
+psycopg2~=2.9.1
+Werkzeug~=2.0.2
