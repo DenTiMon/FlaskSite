@@ -1,14 +1,23 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, g
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask_login import LoginManager, login_user
 import config
 from db.users_control import FDataBase
 import psycopg2
 from config import HOST, DB_USER, DB_PASSWORD, DB_NAME
+from db.UserLogin import UserLogin
 
 app = Flask(__name__)
 dbase = None
 app.config['SECRET_KEY'] = config.SECRET_KEY
+
+login_manager = LoginManager(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    print('load_user')
+    return UserLogin().fromDB(user_id, dbase)
 
 
 # Подключение к БД
@@ -60,22 +69,29 @@ def close_db(error):
 
 # Регистрация и авторизация пользователя
 @app.route('/auth', methods=['POST', 'GET'])
-# Регистрация
-def register():
+def auth_reg():
     if request.method == 'POST':
-        if 4 < len(request.form['login_reg']) < 20 and len(request.form['password_reg']) > 4 and \
-                request.form['password_reg'] == request.form['password2_reg']:
-            hash = generate_password_hash(request.form['password_reg'])
-            res = dbase.add_user(request.form['email_reg'], request.form['login_reg'], hash)
-            print('++')
-            if res:
-                flash('Вы успешно зарегистрировались', 'success')
-                return redirect('/new')
+        # Авторизация
+        if request.form['btn'] == 'login':
+            user = dbase.getUserByEmail(request.form['email_login'])
+            if user and check_password_hash(user[3], request.form['password_login']):
+                userlogin = UserLogin().create(user)
+                login_user(userlogin)
+                return redirect(url_for('index'))
+            flash('Неверная пара логин/пароль', 'error')
+        # Регистрация
+        if request.form['btn'] == 'register':
+            if 4 <= len(request.form['login_reg']) <= 20 and len(request.form['password_reg']) > 4 and \
+                    request.form['password_reg'] == request.form['password2_reg']:
+                hash = generate_password_hash(request.form['password_reg'])
+                res = dbase.add_user(request.form['email_reg'], request.form['login_reg'], hash)
+                if res:
+                    flash('Вы успешно зарегистрировались', 'success')
+                    return redirect('/new')
+                else:
+                    flash('Ошибка при добавлении в БД', 'error')
             else:
-                flash('Ошибка при добавлении в БД', 'error')
-
-        else:
-            flash('Неверно заполнены поля', 'error')
+                flash('Неверно заполнены поля', 'error')
 
     return render_template('auth.html')
 

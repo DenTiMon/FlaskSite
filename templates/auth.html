@@ -42,9 +42,9 @@
           <div class="cont_form_login">
             <a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
               <h2>Войти</h2>
-              <input type="text" placeholder="E-mail" name="email_auth" required/>
-              <input type="password" placeholder="Пароль" name="password_auth" required/>
-              <button class="btn_login" onclick="cambiar_login()">Войти</button>
+              <input type="text" placeholder="E-mail" name="email_login" required/>
+              <input type="password" placeholder="Пароль" name="password_login" required/>
+              <input type="submit" class="btn_login" name="btn" value="login" onclick="cambiar_login()">
           </div>
         </form>
         <form action="/auth" method="post" class="form">
@@ -55,7 +55,7 @@
               <input type="text" placeholder="Логин" name="login_reg" required/>
               <input type="password" placeholder="Пароль" name="password_reg" required/>
               <input type="password" placeholder="Повторите пароль" name="password2_reg" required/>
-              <button class="btn_sign_up" onclick="cambiar_sign_up()">Зарегистрироваться</button>
+              <button class="btn_sign_up" name="btn" value="register" onclick="cambiar_sign_up()">Зарегистрироваться</button>
           </div>
         </form>
       </div>
