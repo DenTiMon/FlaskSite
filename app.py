@@ -12,6 +12,7 @@ dbase = None
 app.config['SECRET_KEY'] = config.SECRET_KEY
 
 login_manager = LoginManager(app)
+menu = ['Главная страница', 'Создать проект', 'Авторизация']
 
 
 @login_manager.user_loader
@@ -91,14 +92,25 @@ def auth_reg():
                 else:
                     flash('Ошибка при добавлении в БД', 'error')
             else:
-                flash('Неверно заполнены поля', 'error')
+                if len(request.form['login_reg']) <= 4:
+                    flash('Длина логина должна быть больше 4 симоволов', 'error')
+                    print('Длина логина должна быть больше 4 симоволов', 'error')
+                elif len(request.form['login_reg']) >= 20:
+                    flash('Длина логина должна быть меньше 20 симоволов', 'error')
+                    print('Длина логина должна быть меньше 20 симоволов', 'error')
+                elif len(request.form['password_reg']) < 4:
+                    flash('Длина пароля должна быть больше 4 симоволов', 'error')
+                    print('Длина пароля должна быть больше 4 симоволов', 'error')
+                elif request.form['password_reg'] != request.form['password2_reg']:
+                    flash('Пароли не совпадают', 'error')
+                    print('Пароли не совпадают', 'error')
 
-    return render_template('auth.html')
+    return render_template('auth.html', title='Форма авторизации и регистрации')
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', menu=menu)
 
 
 @app.route('/new')

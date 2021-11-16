@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Форма авторизации и регистрации | pcvector.net</title>
+  <title> {{ title }} </title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&amp;subset=cyrillic" rel="stylesheet">
   <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
   <link rel="stylesheet" href="../static/css/style.css">
@@ -44,7 +44,7 @@
               <h2>Войти</h2>
               <input type="text" placeholder="E-mail" name="email_login" required/>
               <input type="password" placeholder="Пароль" name="password_login" required/>
-              <input type="submit" class="btn_login" name="btn" value="login" onclick="cambiar_login()">
+            <button type="submit" class="btn_login" name="btn" value="login" onclick="cambiar_login()">Войти</button>
           </div>
         </form>
         <form action="/auth" method="post" class="form">
